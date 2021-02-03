@@ -21,6 +21,8 @@
     "@angular/router": "~8.1.0",
     "devextreme": "18.2.11",
     "devextreme-angular": "18.2.11",
+    "file-saver": "^2.0.5",
+    "jszip": "^3.5.0",
     "ng-multiselect-dropdown": "^0.2.3",
     "ng2-completer": "^3.0.2",
     "rxjs": "~6.4.0",

@@ -2,6 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { CompleterService, CompleterData } from 'ng2-completer';
 import { async } from '@angular/core/testing';
 import { FileService } from './services/file.service';
+import * as JSZip from 'jszip';
+import * as FileSaver from 'file-saver'; 
 
 @Component({
   selector: 'app-root',
@@ -17,7 +19,7 @@ export class AppComponent implements OnInit {
 
   btobFile: any;
   files: any = [];
-
+  zipFileGenerated: File;
   // title = 'multiselect';
   // dropdownList = [];
   // selectedItems = [];
@@ -107,7 +109,33 @@ export class AppComponent implements OnInit {
     return theBlob;
   }
 
-  uploadImage() {
+  async createZip(files: any[], zipName: string){  
+    const zip = new JSZip();  
+    const name = zipName + '.zip';  
+    await zip.file(this.fileToSend.name, this.fileToSend);
+    await zip.generateAsync({ type: 'blob' }).then((content) => {  
+      if (content) {  
+        // this.zipFileGenerated = FileSaver.saveAs(content, name);  
+        this.zipFileGenerated = this.blobToFile(content,name);
+        console.log("zip1",this.zipFileGenerated)
+        // return new Promise();
+      }  
+    }); 
+    // tslint:disable-next-line:prefer-for-of  
+    // for (let counter = 0; counter < files.length; counter++) {  
+    //   const element = files[counter];  
+    //   const fileData: any = await this.getFile(element);  
+    //   const b: any = new Blob([fileData], { type: '' + fileData.type + '' });  
+    //   zip.file(element.substring(element.lastIndexOf('/') + 1), b);  
+    // }  
+    // zip.generateAsync({ type: 'blob' }).then((content) => {  
+    //   if (content) {  
+    //     FileSaver.saveAs(content, name);  
+    //   }  
+    // });  
+  }  
+
+  async uploadImage() {
     const inputEl: HTMLInputElement = this.inputEl.nativeElement;
     const fileCount: number = inputEl.files.length;
     const formData = new FormData();
@@ -121,10 +149,27 @@ export class AppComponent implements OnInit {
     one.id = 1;
     one.text = 'Hello';
     if (fileCount > 0) { // a file was selected
-      for (let i = 0; i < fileCount; i++) {
-        // formData.append('myFile', inputEl.files.item(i));
-        formData.append('myFile', this.fileToSend);
-      }
+      // for (let i = 0; i < fileCount; i++) {
+      //   // formData.append('myFile', inputEl.files.item(i));
+      //   formData.append('myFile', this.fileToSend);
+      // }
+      await this.createZip([],"new");
+      // .then(
+      //   x =>{
+      //     console.log("zipfile",this.zipFileGenerated);
+      //     formData.append('myFile', this.zipFileGenerated);
+      //     formData.append('fileSelected', '{"manualAlertPublishedV":{"partNum":"SDWDSD","partDescription":"sdsd","region":"APJ","demandRegion":"APJ","site":"APCC","commodity":"XLOB","cfg":"dsdsd","platform":"sdsd","lob":"sdsd","recoveryFromStbl":"09/20/2019","recoveryToGreenDsi":"09/20/2019","dsi1WeekPrior":"11","dsiBeginningOfTheMonth":"11","revenueImpact":"11","pps":"11","directPps":"11","scheduledPps":"11","currentStbl":"11","directStbl":"11","scheduledStbl":"11","rootCause":"11","rootCauseClassify":"SUP - Quality Issues (SQE)","ruleTypeSet":["High PPS","Long Term Gap Out","Severe STBL"],"distributionList":"swapna_barma@dellteam.com","adhocList":"","attainment":null,"execSummary":null,"optionalPart":null,"currentSupplyInfo":null,"subcomponentSupplyInformation":null,"lessonLearned":null,"odmFeedback":null,"longTermMitigation":null,"lessonLearnedDueDate":null,"longTermMitigationDueDate":null,"nextUpdate":null},"executiveSummaryV":[],"supplierFeedbackV":[]}');
+      //     console.log('formdata', formData);
+      //     this.fileService.uploadFile(formData).subscribe((data) => {
+      //       console.log(data.body);
+      //     }, error => {
+      //       console.log(error);
+      //     });
+
+      //   }
+      // );
+      console.log("zipfile",this.zipFileGenerated);
+      formData.append('myFile', this.zipFileGenerated);
       formData.append('fileSelected', '{"manualAlertPublishedV":{"partNum":"SDWDSD","partDescription":"sdsd","region":"APJ","demandRegion":"APJ","site":"APCC","commodity":"XLOB","cfg":"dsdsd","platform":"sdsd","lob":"sdsd","recoveryFromStbl":"09/20/2019","recoveryToGreenDsi":"09/20/2019","dsi1WeekPrior":"11","dsiBeginningOfTheMonth":"11","revenueImpact":"11","pps":"11","directPps":"11","scheduledPps":"11","currentStbl":"11","directStbl":"11","scheduledStbl":"11","rootCause":"11","rootCauseClassify":"SUP - Quality Issues (SQE)","ruleTypeSet":["High PPS","Long Term Gap Out","Severe STBL"],"distributionList":"swapna_barma@dellteam.com","adhocList":"","attainment":null,"execSummary":null,"optionalPart":null,"currentSupplyInfo":null,"subcomponentSupplyInformation":null,"lessonLearned":null,"odmFeedback":null,"longTermMitigation":null,"lessonLearnedDueDate":null,"longTermMitigationDueDate":null,"nextUpdate":null},"executiveSummaryV":[],"supplierFeedbackV":[]}');
       console.log('formdata', formData);
       this.fileService.uploadFile(formData).subscribe((data) => {
