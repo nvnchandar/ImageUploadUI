@@ -1,0 +1,38 @@
+<dx-chart #targetBarChart [ngStyle]="{'height': len}" [dataSource]='barData' [barWidth]="barWidth">
+    <dxo-size [height]="hie" [width]="wid"></dxo-size>
+    <dxi-value-axis [visible]="false" [allowDecimals]="allowDecimals" [maxValueMargin]="0.2" position="left" name="alertCount" [max]="barMax" >
+      <!-- <dxo-visual-range></dxo-visual-range> {startValue:0,endValue:60}-->
+      <dxo-label [visible]="true">
+        <dxo-font [size]="barValueFont" color="#808080" weight="normal"></dxo-font>
+      </dxo-label>
+      <dxo-title [text]="barTitleText">
+        <dxo-font [size]="barTitleFont" [color]="barTitle" weight="bold"></dxo-font>
+      </dxo-title>
+      <dxo-grid [color]="gridColor" [visible]="true"></dxo-grid>
+    </dxi-value-axis>
+    <dxo-argument-axis visible='true' [color]="gridColor"  >
+      <dxo-label [customizeText]="customizeLabel">
+        <dxo-font [size]="9" [color]="barArgumentLabel" weight="regular"></dxo-font>
+      </dxo-label>
+    </dxo-argument-axis>
+    <dxo-tooltip [color]="toolTipBackgroundColor"
+        [enabled]="true"
+        [shared]="true"
+        [zIndex]="1100"
+        [customizeTooltip]="customizeTooltip">
+        <dxo-font [size]="9" [color]="toolTipTextColor" weight="regular"></dxo-font>
+    </dxo-tooltip> 
+    <dxo-common-axis-settings>
+      <dxo-label [visible]="true">
+      </dxo-label>
+    </dxo-common-axis-settings>
+    <dxo-common-series-settings argumentField="alertName">
+    </dxo-common-series-settings>
+    <dxi-series type="bar" [color]="barColor" valueField="alertCount" axis="alertCount" name="Count" hoverStyle="none">
+      <dxo-label [visible]="true" backgroundColor="none">
+        <dxo-font [size]="barLabelFont" weight="BOLD" [color]="barLabel"></dxo-font>
+      </dxo-label>
+    </dxi-series>
+    <dxo-legend [visible]="false"></dxo-legend>
+  </dx-chart>
+  

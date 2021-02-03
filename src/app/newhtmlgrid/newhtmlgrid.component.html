@@ -1,0 +1,140 @@
+<div *ngIf = "loaded" style="padding-bottom: 2rem;">
+    <table style="width: 400px;float: left;border-right:0px;">
+        <thead>
+            <tr>
+                <th scope="col" class="finePadding" colspan="2"><br /></th>
+            </tr>
+        </thead>
+        <tbody *ngIf="responseSite.length > 0">
+            <tr>
+                <th scope="row" colspan="2">DEMAND</th>
+            </tr>
+        </tbody>
+        <tbody *ngIf="responseSite.length > 0">
+            <tr>
+                <th [attr.rowspan]="siteRowSpan" scope="rowgroup">Site</th>
+                <th scope="row">{{responseSite[0]}}</th>
+            </tr>
+            <tr *ngFor="let site of responseSite | slice:1;let i = index">
+                <th scope="row">{{site}}</th>
+            </tr>
+            <tr *ngIf="response.demand.totalDemand.length > 0">
+                <th scope="row" style="border-right: 0px;"></th>
+                <th scope="row">Total Demand</th>
+            </tr>
+        </tbody>
+        <tbody *ngIf="response.supply.length > 0">
+            <tr>
+                <th scope="row" colspan="2">SUPPLY</th>
+            </tr>
+        </tbody>
+        <tbody *ngFor="let supplyItem of response.supply">
+            <tr>
+                <th rowspan="3" scope="rowgroup">{{supplyItem.name}}</th>
+                <th scope="row">Air</th>
+            </tr>
+            <tr>
+                <th scope="row">Surface</th>
+            </tr>
+            <tr>
+                <th scope="row">All</th>
+            </tr>
+        </tbody>
+
+        <tbody *ngIf="responseInventory.length > 0">
+            <tr>
+                <th scope="row" colspan="2">INVENTORY</th>
+            </tr>
+        </tbody>
+        <tbody *ngIf="responseInventory.length > 0">
+            <tr *ngIf="response.inventory.slc.length > 0">
+                <th scope="row" style="border-right: 0px;"></th>
+                <th scope="row">SLC</th>
+            </tr>
+            <tr *ngIf="response.inventory.foh.length > 0">
+                <th scope="row" style="border-right: 0px;"></th>
+                <th scope="row">FOH</th>
+            </tr>
+            <tr *ngIf="response.inventory.totalInventory.length > 0">
+                <th scope="row" style="border-right: 0px;"></th>
+                <th scope="row">Total Inventory</th>
+            </tr>
+            <tr *ngIf="response.inventory.projInventory.length > 0">
+                <th scope="row" style="border-right: 0px;">Projected Inventory</th>
+                <th scope="row"></th>
+            </tr>
+            <tr *ngIf="response.inventory.projDSI.length > 0">
+                <th scope="row" style="border-right: 0px;">Projected DSI</th>
+                <th scope="row" style="border-right: 0px;"></th>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="max-width: 500px;float: left;overflow-x: auto;">
+        <table style="border-left:0px;">
+            <thead>
+                <tr>
+                    <td class="finePadding" scope="col">Current Status</td>
+                    <td *ngFor="let col of cols" class="finePadding" scope="col">W{{col}}</td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="finePadding"></td>
+                    <td class="finePadding" colspan="13"></td>
+                </tr>
+            </tbody>
+            <tbody>
+                <tr *ngFor="let site of responseSite;">
+                    <td *ngFor="let data of response.demand.site[site]" class="finePadding">{{data}}</td>
+                </tr>
+                <tr *ngIf="response.demand.totalDemand.length > 0">
+                    <td *ngFor="let data of response.demand.totalDemand" class="finePadding">{{data}}</td>
+                </tr>
+            </tbody>
+
+            <tbody>
+                <tr>
+                    <td class="finePadding"></td>
+                    <td class="finePadding" colspan="13"></td>
+                </tr>
+            </tbody>
+            <tbody *ngFor="let supplyItem of response.supply">
+                <tr>
+                    <td *ngFor="let data of supplyItem.air" class="finePadding">{{data}}</td>
+                </tr>
+                <tr>
+                    <td *ngFor="let data of supplyItem.surface" class="finePadding">{{data}}</td>
+                </tr>
+                <tr>
+                    <td *ngFor="let data of supplyItem.all" class="finePadding">{{data}}</td>
+                </tr>
+            </tbody>
+
+            <tbody *ngIf="responseInventory.length > 0">
+                <tr>
+                    <td class="finePadding"></td>
+                    <td class="finePadding" colspan="13"></td>
+                </tr>
+            </tbody>
+            <tbody *ngIf="responseInventory.length > 0">
+                <tr *ngIf="response.inventory.slc.length > 0">
+                    <td *ngFor="let data of response.inventory.slc" class="finePadding">{{data}}</td>
+                </tr>
+                <tr *ngIf="response.inventory.foh.length > 0">
+                    <td *ngFor="let data of response.inventory.foh" class="finePadding">{{data}}</td>
+                </tr>
+                <tr *ngIf="response.inventory.totalInventory.length > 0">
+                    <td *ngFor="let data of response.inventory.totalInventory" class="finePadding">{{data}}</td>
+                </tr>
+                <tr *ngIf="response.inventory.projInventory.length > 0">
+                    <td *ngFor="let data of response.inventory.projInventory" class="finePadding">{{data}}</td>
+                </tr>
+                <tr *ngIf="response.inventory.projDSI.length > 0">
+                    <td class="finePadding" style="border-right:0px;"></td>
+                    <td *ngFor="let data of response.inventory.projDSI | slice:1" class="finePadding">{{data}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

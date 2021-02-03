@@ -1,0 +1,16 @@
+<div id="pivotgrid-demo">
+    <dx-pivot-grid id="pivotgrid"
+      [allowSortingBySummary]="true"
+      [allowFiltering]="true"
+      [showBorders]="true"
+      [allowSortingBySummary]="true"
+      [showColumnGrandTotals]="false"
+      [showRowGrandTotals]="false"
+      [showRowTotals]="false"
+      [showColumnTotals]="false"
+      [allowExpandAll]="false"
+      [dataSource]="pivotGridDataSource"
+      (onCellClick)="onCellClick($event)">
+      <dxo-scrolling mode="virtual"></dxo-scrolling>
+    </dx-pivot-grid>
+  </div>

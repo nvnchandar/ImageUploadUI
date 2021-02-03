@@ -1,0 +1,24 @@
+
+table {
+    border: 1px solid #ddd;
+    border-spacing: 0px;
+  }
+
+tr,td,th{
+  height: 3rem !important;
+}
+
+tr,td,th{
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+th{
+    text-align: left;
+    padding-left: 1rem;
+}
+
+.finePadding{
+  padding-right: 1rem;
+  padding-left: 1rem;
+}

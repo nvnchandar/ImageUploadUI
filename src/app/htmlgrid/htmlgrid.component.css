@@ -1,0 +1,61 @@
+.outer {position:relative}
+.inner {
+  overflow-x:scroll;
+  overflow-y:visible;
+  width:500px; 
+  margin-left:200px;
+}
+
+
+
+table {
+  table-layout: fixed; 
+  width: 100%;
+  *margin-left: -100px;/*ie7*/
+}
+td, th {
+  vertical-align: center;
+  border-top: 1px solid #ccc;
+  padding:10px;
+  width:100px;
+}
+
+/* th{
+  position: absolute;
+} */
+
+.col1{
+  position:absolute;
+ 
+  left:0; 
+  width:100px;
+}
+.col2{
+  position:absolute;
+ 
+  left:100px; 
+  width:100px;
+}
+
+
+
+
+
+table {
+    border: 1px solid #ddd;
+    border-spacing: 0px;
+  }
+
+tr,td,th{
+  height: 3rem !important;
+}
+
+tr,td,th{
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
+
+.finePadding{
+  padding-right: 1rem;
+  padding-left: 1rem;
+}

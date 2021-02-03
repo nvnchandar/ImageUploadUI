@@ -1,0 +1,12 @@
+<p>parent works!</p>
+
+<div style="width: 300px;">
+<app-charts [barData]="alertLeverOverviewChartData" [hie]="200" id="rootCauseTypeChart"
+    *ngIf="alertLeverOverviewChartMax > 0" [barLabel]="barLabel" [barArgumentLabel]="barArgumentLabel"
+    [barWidth]="alertLevelBarWidth" [barMax]="alertLeverOverviewChartMax"
+    [allowDecimals]="!(alertLeverOverviewChartMax > 5)" [barTitle]="barTitle" [barColor]="'#0076CE'"
+    [barArgumentFont]="10" [barValueFont]="12" [barTitleFont]="12" [barLabelFont]="13" [barTitleText]="'NO. OF ALERTS'"
+    [gridColor]="barChartGridColor" [barChartTotalSize]="'1'" [toolTipBackgroundColor]="barChartToolTipBGColor"
+    [toolTipTextColor]="barChartToolTipTextColor">
+</app-charts>
+</div>

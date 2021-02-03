@@ -1,0 +1,128 @@
+<!-- <table>        
+  <ng-container *ngFor="let data of dataList">    
+      <tr>
+          <td class="finePadding" [attr.rowspan]="data.numbers.length">{{data.pname}}</td>
+          <td class="finePadding">{{data.numbers[0]}}</td>
+      </tr>
+      <ng-container *ngFor="let number of data.numbers; let i= index;">
+          <tr *ngIf="i!=0">
+              <td class="finePadding">{{number}}</td>
+          </tr>
+      </ng-container>
+  </ng-container>
+</table> -->
+<div class="outer">
+  <div class="inner">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col" class="finePadding" ><br /></th>
+          <th scope="col" class="finePadding" ><br /></th>
+          <td class="finePadding" scope="col">Current Status</td>
+          <td class="finePadding" scope="col">W1</td>
+          <td class="finePadding" scope="col">W2</td>
+          <td class="finePadding" scope="col">W3</td>
+          <td class="finePadding" scope="col">W4</td>
+          <td class="finePadding" scope="col">W5</td>
+          <td class="finePadding" scope="col">W6</td>
+          <td class="finePadding" scope="col">W7</td>
+          <td class="finePadding" scope="col">W8</td>
+          <td class="finePadding" scope="col">W9</td>
+          <td class="finePadding" scope="col">W10</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th [attr.rowspan]="siteRowSpan" scope="rowgroup">Site</th>
+          <th scope="row">Full color</th>
+          <td class="finePadding">0</td>
+          <td class="finePadding">11111</td>
+          <td class="finePadding">2</td>
+          <td class="finePadding">3</td>
+          <td class="finePadding">4</td>
+          <td class="finePadding">5</td>
+          <td class="finePadding">6</td>
+          <td class="finePadding">7</td>
+          <td class="finePadding">8</td>
+          <td class="finePadding">9</td>
+          <td class="finePadding">10</td>
+        </tr>
+        <tr>
+          <th scope="row">Black and white</th>
+          <td class="finePadding">0</td>
+          <td class="finePadding">11111</td>
+          <td class="finePadding">2</td>
+          <td class="finePadding">3</td>
+          <td class="finePadding">4</td>
+          <td class="finePadding">5</td>
+          <td class="finePadding">6</td>
+          <td class="finePadding">7</td>
+          <td class="finePadding">8</td>
+          <td class="finePadding">9</td>
+          <td class="finePadding">10</td>
+        </tr>
+        <tr>
+          <th scope="row">Sepia</th>
+          <td class="finePadding">0</td>
+          <td class="finePadding">11111</td>
+          <td class="finePadding">2</td>
+          <td class="finePadding">3</td>
+          <td class="finePadding">4</td>
+          <td class="finePadding">5</td>
+          <td class="finePadding">6</td>
+          <td class="finePadding">7</td>
+          <td class="finePadding">8</td>
+          <td class="finePadding">9</td>
+          <td class="finePadding">10</td>
+        </tr>
+        <tr>
+          
+          <th scope="row" colspan="2">Total</th>
+          <td class="finePadding">0</td>
+          <td class="finePadding">11111</td>
+          <td class="finePadding">2</td>
+          <td class="finePadding">3</td>
+          <td class="finePadding">4</td>
+          <td class="finePadding">5</td>
+          <td class="finePadding">6</td>
+          <td class="finePadding">7</td>
+          <td class="finePadding">8</td>
+          <td class="finePadding">9</td>
+          <td class="finePadding">10</td>
+        </tr>
+      </tbody>
+      <tbody>
+        <tr>
+          <th rowspan="2" scope="rowgroup">Angels</th>
+          <th scope="row">Black and white</th>
+          <td class="finePadding">0</td>
+          <td class="finePadding">11111</td>
+          <td class="finePadding">2</td>
+          <td class="finePadding">3</td>
+          <td class="finePadding">4</td>
+          <td class="finePadding">5</td>
+          <td class="finePadding">6</td>
+          <td class="finePadding">7</td>
+          <td class="finePadding">8</td>
+          <td class="finePadding">9</td>
+          <td class="finePadding">10</td>
+        </tr>
+        <tr>
+          <th scope="row">Sepia</th>
+          <td class="finePadding">0</td>
+          <td class="finePadding">11111</td>
+          <td class="finePadding">2</td>
+          <td class="finePadding">3</td>
+          <td class="finePadding">4</td>
+          <td class="finePadding">5</td>
+          <td class="finePadding">6</td>
+          <td class="finePadding">7</td>
+          <td class="finePadding">8</td>
+          <td class="finePadding">9</td>
+          <td class="finePadding">10</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
