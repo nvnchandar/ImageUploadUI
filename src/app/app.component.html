@@ -1,16 +1,27 @@
 <!-- <router-outlet></router-outlet> -->
  <form>
-  <input type="file" #fileInput [multiple] = "true" (change)="onChange($event)">
+   <!-- single -->
+   <!-- <input type="file" #fileInput  (change)="onChange($event)"> -->
+
+   <!-- multiple -->
+  <input type="file" #fileInput [multiple] = "true" (change)="onChangeMultiple($event)">
   <button type="button" (click)="uploadImage()">Upload</button>
 </form>
 
-<img [src]="fileSelected" alt="Selected Image" style="width: 80%;height:200px;">
+<!-- single -->
+<!-- <img [src]="fileSelected" alt="Selected Image" style="width: 80%;height:200px;"> -->
+
+<!-- multiple -->
+<div *ngFor="let image of fileSelectedMultiple">
+  <img  [src]="image" alt="Selected Image" style="width: 80%;height:400px;">
+</div>
+
 <br/>
 <br/>
-<!-- <button type="button" (click)="downloadImage()">Download</button>
+<button type="button" (click)="downloadImage2()">Download</button>
 <img [src]="downloadeFile" alt="Selected Image" style="width: 20%;height:20px;">
-<img [src]="btobFile" alt="Selected Image" style="width: 20%;height:20px;">
-<div>{{downloadeFile.name}}</div> -->
+<img [src]="btobFile" alt="Selected Image" style="width: 80%;height:200px;">
+<!-- <div>{{downloadeFile.name}}</div> -->
 
 <!--
 <div style="width: 100%; margin-top: 1rem;">

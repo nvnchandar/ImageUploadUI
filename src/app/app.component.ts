@@ -4,6 +4,8 @@ import { async } from '@angular/core/testing';
 import { FileService } from './services/file.service';
 import * as JSZip from 'jszip';
 import * as FileSaver from 'file-saver'; 
+import { resolve } from 'url';
+import { Observable, Observer } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -17,9 +19,16 @@ export class AppComponent implements OnInit {
   fileToSend: File;
   downloadeFile: any;
 
-  btobFile: any;
+  btobFile: any = "";
   files: any = [];
   zipFileGenerated: File;
+
+  fileSelectedMultiple: any[] = [];
+  fileToSendMultiple: File[] = [];
+
+  retrievedFilesMultiple: File[] = [];
+
+  fileNameOfSelected: string = "";
   // title = 'multiselect';
   // dropdownList = [];
   // selectedItems = [];
@@ -81,6 +90,198 @@ export class AppComponent implements OnInit {
     reader.readAsDataURL(event.target.files[0]);
   }
 
+  onChangeMultiple(event: any) {
+    // console.log(event.srcElement.value)
+    // this.fileSelected = event.srcElement.value;
+    let files = event.target.files;
+    for (let file of files) {
+      this.fileToSendMultiple.push(file);
+    }
+    // this.fileSelectedMultiple = event.target.files[0];
+    this.makeDisplayImage(event.target.files);
+
+  }
+
+  makeDisplayImage(files: File[]){
+    // console.log("files",files)
+    for (let file of files) {
+      let reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.fileSelectedMultiple.push(e.target.result);
+      }
+      reader.readAsDataURL(file);
+    }
+    // files.forEach((x,index) =>{
+    //   var reader = new FileReader();
+
+    //   reader.onload = (e: any) => {
+    //   this.fileSelectedMultiple[index] = e.target.result;
+    //   };
+
+    //   reader.readAsDataURL(x[index]);
+
+    // });
+
+  }
+
+  async downloadImage1() {
+    await this.fileService.downlaodFile().toPromise().then(async (data) => {
+      console.log("data",data);
+      const blob = new Blob([data], {
+        type: 'application/zip'
+      });
+      // const url = window.URL.createObjectURL(blob);
+      // window.open(url);
+      const jsZip = new JSZip();  
+      jsZip.loadAsync(blob).then(async (zip) => { // <----- HERE
+        // console.log("home",zip.files["nav.png"])
+        // // this.btobFile = zip.files["Home.png"];
+        // zip.files["nav.png"].async("base64")
+        // .then((content)=> {
+        //   console.log("content", content)
+        
+        //   // let imgType = 
+        //   // working
+        //   // this.addToImage('data:image/png;base64,' + content);
+        //   this.addToImage(content);
+        // })
+        await Object.keys(zip.files).forEach((filename) => { 
+          console.log("filename",zip.files[filename])
+          this.fileNameOfSelected = filename;
+          console.log("this.fileNameOfSelected",this.fileNameOfSelected)
+          zip.files[filename].async("base64").then(async (fileData) => { 
+            let base64File = fileData;
+            let fileTypeSplit = this.fileNameOfSelected.toLowerCase().split(".")[1];
+            var fileType = "";
+            if(fileTypeSplit === 'png') {
+              fileType = "image/png";
+            } else if(fileTypeSplit === 'jpg' || fileTypeSplit === 'jpeg'){
+              fileType = "image/jpg";
+            } else if(fileTypeSplit === ""){
+              fileType = "image/png";
+            }
+            this.dataURItoBlob(base64File,fileType).toPromise().then((blob: Blob) => {
+              let imageBlob: Blob = blob;
+              let imageName: string = this.fileNameOfSelected;
+              let imageFile: File = new File([imageBlob], imageName, {
+                type: fileType
+              });
+              this.retrievedFilesMultiple.push(imageFile);
+              console.log("retrievedFilesMultiple", this.retrievedFilesMultiple);
+            });
+          });
+        });
+      });
+      console.log("retrievedFilesMultiple", this.retrievedFilesMultiple);
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  async downloadImage2() {
+    await this.fileService.downlaodFile().toPromise().then(async (data) => {
+      console.log("data",data);
+      const blob = new Blob([data], {
+        type: 'application/zip'
+      });
+      const jsZip = new JSZip();  
+      jsZip.loadAsync(blob).then(async (zip) => { 
+
+        await this.asyncForEach(Object.keys(zip.files), async(filename) =>{
+          console.log("filename",zip.files[filename])
+          this.fileNameOfSelected = filename;
+          console.log("this.fileNameOfSelected",this.fileNameOfSelected)
+          await zip.files[filename].async("base64").then(async (fileData) => { 
+            let base64File = fileData;
+            let fileTypeSplit = this.fileNameOfSelected.toLowerCase().split(".")[1];
+            var fileType = "";
+            if(fileTypeSplit === 'png') {
+              fileType = "image/png";
+            } else if(fileTypeSplit === 'jpg' || fileTypeSplit === 'jpeg'){
+              fileType = "image/jpg";
+            } else if(fileTypeSplit === ""){
+              fileType = "image/png";
+            }
+            await this.dataURItoBlob(base64File,fileType).toPromise().then((blob: Blob) => {
+              let imageBlob: Blob = blob;
+              let imageName: string = this.fileNameOfSelected;
+              let imageFile: File = new File([imageBlob], imageName, {
+                type: fileType
+              });
+              this.retrievedFilesMultiple.push(imageFile);
+              console.log("retrievedFilesMultiple", this.retrievedFilesMultiple);
+            });
+          });
+        })
+        this.makeDisplayImage(this.retrievedFilesMultiple);
+      });
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  async asyncForEach(array,callback){
+    for(let index = 0; index< array.length; index++)
+    await callback(array[index]);
+  }
+
+  addToImage(file:any){
+    this.btobFile = file;
+    this.createBlobImageFileAndShow();
+  }
+
+  createBlobImageFileAndShow(): void {
+    this.dataURItoBlob(this.btobFile,"image/png").subscribe((blob: Blob) => {
+      const imageBlob: Blob = blob;
+      const imageName: string = this.generateName();
+      const imageFile: File = new File([imageBlob], imageName, {
+        type: "image/png"
+      });
+      // let file = window.URL.createObjectURL(imageFile);
+      console.log("imageFile",imageFile)
+
+      const reader = new FileReader();
+
+      reader.onload = (e: any) => {
+        this.downloadeFile = e.target.result;
+      };
+
+      reader.readAsDataURL(imageFile);
+      // this.downloadeFile = 
+      // window.open(this.generatedImage);
+    });
+  }
+  
+    /* Method to convert Base64Data Url as Image Blob */
+  dataURItoBlob(dataURI: string,fileType:string): Observable<Blob> {
+    return new Observable((observer: Observer<Blob>) => {
+      const byteString: string = window.atob(dataURI);
+      const arrayBuffer: ArrayBuffer = new ArrayBuffer(byteString.length);
+      const int8Array: Uint8Array = new Uint8Array(arrayBuffer);
+      for (let i = 0; i < byteString.length; i++) {
+        int8Array[i] = byteString.charCodeAt(i);
+      }
+      const blob = new Blob([int8Array], { type: fileType });
+      observer.next(blob);
+      observer.complete();
+    });
+  }
+
+  /**Method to Generate a Name for the Image */
+  generateName(): string {
+    const date: number = new Date().valueOf();
+    let text: string = "";
+    const possibleText: string =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    for (let i = 0; i < 5; i++) {
+      text += possibleText.charAt(
+        Math.floor(Math.random() * possibleText.length)
+      );
+    }
+    // Replace extension according to your media type like this
+    return date + "." + text + ".jpeg";
+  }
+
   downloadImage() {
     this.fileService.downlaodFile().subscribe((data) => {
       // console.log(data.body);
@@ -135,12 +336,35 @@ export class AppComponent implements OnInit {
     // });  
   }  
 
+  async createZipMultiple(files: any[], zipName: string){  
+    const zip = new JSZip();  
+    const name = zipName + '.zip';  
+    for(let file of files){
+      zip.file(file.name, file, { base64: true });
+    }
+    
+    await zip.generateAsync({ type: 'blob' }).then((content) => {  
+      if (content) {  
+        // this.zipFileGenerated = FileSaver.saveAs(content, name);  
+        this.zipFileGenerated = this.blobToFile(content,name);
+        console.log("zip1",this.zipFileGenerated)
+        // return new Promise();
+      }  
+    }); 
+  } 
+
   async uploadImage() {
+    // this.fileToSendMultiple = this.retrievedFilesMultiple;
     const inputEl: HTMLInputElement = this.inputEl.nativeElement;
-    const fileCount: number = inputEl.files.length;
+    //single
+    // const fileCount: number = inputEl.files.length;
+
+    //multiple
+    const fileCount: number = this.fileToSendMultiple.length;
     const formData = new FormData();
     console.log(fileCount);
-    console.log(inputEl.files);
+    // console.log(inputEl.files);
+    console.log(this.fileToSendMultiple);
     class  ONE {
       id: number;
       text: string;
@@ -153,21 +377,13 @@ export class AppComponent implements OnInit {
       //   // formData.append('myFile', inputEl.files.item(i));
       //   formData.append('myFile', this.fileToSend);
       // }
-      await this.createZip([],"new");
-      // .then(
-      //   x =>{
-      //     console.log("zipfile",this.zipFileGenerated);
-      //     formData.append('myFile', this.zipFileGenerated);
-      //     formData.append('fileSelected', '{"manualAlertPublishedV":{"partNum":"SDWDSD","partDescription":"sdsd","region":"APJ","demandRegion":"APJ","site":"APCC","commodity":"XLOB","cfg":"dsdsd","platform":"sdsd","lob":"sdsd","recoveryFromStbl":"09/20/2019","recoveryToGreenDsi":"09/20/2019","dsi1WeekPrior":"11","dsiBeginningOfTheMonth":"11","revenueImpact":"11","pps":"11","directPps":"11","scheduledPps":"11","currentStbl":"11","directStbl":"11","scheduledStbl":"11","rootCause":"11","rootCauseClassify":"SUP - Quality Issues (SQE)","ruleTypeSet":["High PPS","Long Term Gap Out","Severe STBL"],"distributionList":"swapna_barma@dellteam.com","adhocList":"","attainment":null,"execSummary":null,"optionalPart":null,"currentSupplyInfo":null,"subcomponentSupplyInformation":null,"lessonLearned":null,"odmFeedback":null,"longTermMitigation":null,"lessonLearnedDueDate":null,"longTermMitigationDueDate":null,"nextUpdate":null},"executiveSummaryV":[],"supplierFeedbackV":[]}');
-      //     console.log('formdata', formData);
-      //     this.fileService.uploadFile(formData).subscribe((data) => {
-      //       console.log(data.body);
-      //     }, error => {
-      //       console.log(error);
-      //     });
 
-      //   }
-      // );
+      // single file
+      // await this.createZip([],"new");
+
+      // multiple file
+      await this.createZipMultiple(this.fileToSendMultiple,"new");
+
       console.log("zipfile",this.zipFileGenerated);
       formData.append('myFile', this.zipFileGenerated);
       formData.append('fileSelected', '{"manualAlertPublishedV":{"partNum":"SDWDSD","partDescription":"sdsd","region":"APJ","demandRegion":"APJ","site":"APCC","commodity":"XLOB","cfg":"dsdsd","platform":"sdsd","lob":"sdsd","recoveryFromStbl":"09/20/2019","recoveryToGreenDsi":"09/20/2019","dsi1WeekPrior":"11","dsiBeginningOfTheMonth":"11","revenueImpact":"11","pps":"11","directPps":"11","scheduledPps":"11","currentStbl":"11","directStbl":"11","scheduledStbl":"11","rootCause":"11","rootCauseClassify":"SUP - Quality Issues (SQE)","ruleTypeSet":["High PPS","Long Term Gap Out","Severe STBL"],"distributionList":"swapna_barma@dellteam.com","adhocList":"","attainment":null,"execSummary":null,"optionalPart":null,"currentSupplyInfo":null,"subcomponentSupplyInformation":null,"lessonLearned":null,"odmFeedback":null,"longTermMitigation":null,"lessonLearnedDueDate":null,"longTermMitigationDueDate":null,"nextUpdate":null},"executiveSummaryV":[],"supplierFeedbackV":[]}');
